@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "2.2",
+  "description": "Command Document Example JSON Template",
+  "mainSteps": [
+    {
+      "action": "aws:runPowerShellScript",
+      "name": "setPathShowPath",
+      "inputs": {
+        "runCommand": [
+          "echo 'Appending C:\\opscode\\chef\\bin\\ to current PATH'",
+          "$chefPath = \"C:\\opscode\\chefv1\\bin\"",
+          "[System.Environment]::SetEnvironmentVariable('path', \"$env:PATH;$chefPath;\")",
+          "[System.Environment]::SetEnvironmentVariable('path', \"$env:PATH;$chefPath;\", [System.EnvironmentVariableTarget]::Machine)",
+          "echo whoami",
+          "whoami",
+          "echo 'env:Path'",
+          "$env:Path"
+        ]
+      }
+    },
+    {
+      "action": "aws:runPowerShellScript",
+      "name": "showPath",
+      "inputs": {
+        "runCommand": [
+          "echo 'env:Path'",
+          "$env:Path"
+        ]
+      }
+    }
+  ]
+}

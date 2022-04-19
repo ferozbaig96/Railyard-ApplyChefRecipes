@@ -1,0 +1,27 @@
+# SSM Run Command for SetPath and Echo it
+aws ssm send-command --document-name "SetPATH-Echo-PATH" --document-version '$LATEST' --targets '[{"Key":"InstanceIds","Values":["i-00515a1fbf92ae75b"]}]' --parameters '{}' --timeout-seconds 600 --max-concurrency "50" --max-errors "0" --region us-east-1
+
+# update ssm document default version
+$version="7"
+aws ssm update-document-default-version --name "SetPATH-Echo-PATH" --document-version $version
+
+# SSM Run Command for Echo-PATH-AND-EnvVar
+aws ssm send-command --document-name "Echo-PATH-AND-EnvVar" --document-version '$LATEST' \
+	--targets '[{"Key":"InstanceIds","Values":["i-00515a1fbf92ae75b"]}]' \
+	--parameters '{}' \
+	--timeout-seconds 600 --max-concurrency "50" --max-errors "0" --region us-east-1
+
+# SSM Run Command for RunPowerShellScript (Install Chef and show PATH)
+aws ssm send-command --document-name "AWS-RunPowerShellScript" --document-version "1" \
+	--targets '[{"Key":"InstanceIds","Values":["i-01d3b04722c6ead8d"]}]' \
+	--parameters '{"workingDirectory":[""],"executionTimeout":["3600"],"commands":["echo \"installing chef via script\"",". { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -version 15","echo \"showing path now\"","$env:PATH",""]}' \
+	--timeout-seconds 600 --max-concurrency "50" --max-errors "0" --region us-east-1
+
+# SSM Run Command for RunPowerShellScript (show PATH)
+aws ssm send-command --document-name "AWS-RunPowerShellScript" --document-version "1" \
+	--targets '[{"Key":"InstanceIds","Values":["i-01d3b04722c6ead8d"]}]' \
+	--parameters '{"commands":["echo \"showing path now\"","$env:PATH",""],"workingDirectory":[""],"executionTimeout":["3600"]}' \
+	--timeout-seconds 600 --max-concurrency "50" --max-errors "0" --region us-east-1
+
+
+
